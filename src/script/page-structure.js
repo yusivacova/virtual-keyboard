@@ -9,7 +9,7 @@ const ClassName = {
 const titleContent = 'RSS Virtual Keyboard';
 
 const textOperatingSystem = 'Virtual keyboard created on macOS';
-const switchLanguages = 'Switch between different input languages';
+const switchLanguages = 'Switch between different input languages - control + option';
 
 const createElement = (tag, name, content) => {
   const element = document.createElement(tag);
