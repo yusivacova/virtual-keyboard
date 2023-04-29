@@ -117,13 +117,13 @@ const chancgeKeyForShift = () => {
   const buttons = document.querySelectorAll('.keyboard__key');
   const activeShift = document.querySelector('.active-Shift');
 
- const objFirstCommonKeys = KEYS[0];
+  const objFirstCommonKeys = KEYS[0];
 
-  for (let key in objFirstCommonKeys){
+  for (let key in objFirstCommonKeys) {
     let value = objFirstCommonKeys[key];
 
     let element = document.querySelector(`.${key}`);
-    if (activeShift && value.length > 1){
+    if (activeShift && value.length > 1) {
       element.textContent = value[1];
     } else {
       element.textContent = value[0];
@@ -172,16 +172,59 @@ const pastTextContent = (e) => {
   if (!isIncludesClassForCheck) {
     windowContent.value += key.textContent;
   }
+
+  if (e.code === 'Tab') {
+    windowContent.value += '   ';
+  }
+
+  //Изменение позиции курсора и Удаление символов
+  if (e.code === 'Backspace') {
+    let positionСursor = windowContent.selectionStart;
+
+    let arrValue = windowContent.value.split('');
+    arrValue.splice(windowContent.selectionStart - 1, 1);
+    windowContent.value = arrValue.join('');
+    windowContent.selectionStart = positionСursor - 1;
+    windowContent.selectionEnd = positionСursor - 1;
+  }
+
+  if (e.code === 'Enter') {
+    windowContent.value += '\n';
+  }
 }
 
 //общая функция по нажатию на клавиатуру
 const watchClick = (e) => {
+  const windowContent = document.querySelector('.content__window');
+  windowContent.focus();
+
   watchClickCapsLock(e);
   watchClickCntrAlt(e);
   watchClickShift(e);
 }
 
+const addContentAndActiveClassAfterClick = (e) => {
+  const windowContent = document.querySelector('.content__window');
+
+  let classElement = e.target.classList;
+
+  console.log(classElement)
+  console.log(classElement[1])
+//========================
+  if (classElement[0] === 'keyboard__key'){
+    if (!checkArrKey.includes(classElement[1])) {
+      windowContent.value += e.target.textContent;
+    }
+    e.target.classList.add('active-button');
+    setTimeout(() => {
+      e.target.classList.remove('active-button');
+    }, 310);
+  }
+///ПЕРЕПИСАТЬ ФУНКЦИЮ ПО ВСТАВКЕ КОНТЕНТА, ЧТОБЫ ПОДХОДИЛА И ПО КЛИКУ!!
+}
+
 function createKeyboard() {
+  const keyboard = document.querySelector('.keyboard');
   const windowContent = document.querySelector('.content__window');
   pastKeyInKeyboard(KEYS);
 
@@ -190,6 +233,8 @@ function createKeyboard() {
   document.addEventListener('keyup', removeActiveClassKey);
 
   windowContent.addEventListener('keydown', pastTextContent);
+
+  keyboard.addEventListener('click', addContentAndActiveClassAfterClick);
 }
 
 export default createKeyboard;
