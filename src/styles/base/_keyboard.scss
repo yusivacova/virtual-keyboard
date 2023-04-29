@@ -18,8 +18,8 @@
   border: 1px solid #000000;
   text-align: center;
   background-color: rgb(0 182 255 / 81%);
-  box-shadow: 2px 2px 3px #000;
-   transition: all 0.5s ease-out;
+  box-shadow: 3px 3px 3px #000;
+  transition: all 0.2s ease-out;
 }
 
 .Space {
@@ -35,7 +35,11 @@
   width: 5px;
 }
 
-.activeKey {
+.active-button {
   background-color: rgba(0, 94, 255, 0.875);
   box-shadow: 1px 1px 1px #000;
+  border-radius: 15%;
+}
+
+.active-CapsLock {
 }
