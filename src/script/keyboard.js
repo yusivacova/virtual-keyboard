@@ -6,6 +6,8 @@ const checkArrKeyForLang = ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'D
 
 let arrCntrAlt = [];
 
+let isChangeLangOnRu = false;
+
 //Создание клавиатуры
 const pastKeyInKeyboard = (arrKey) => {
   const keyboard = document.querySelector('.keyboard');
@@ -16,6 +18,10 @@ const pastKeyInKeyboard = (arrKey) => {
     keyboard.append(container);
 
     let currentObj = arrKey[i];
+
+    if (isChangeLangOnRu){
+      keyboard.classList.add('lang');
+    }
 
     createElement(currentObj, container);
   }
@@ -152,14 +158,21 @@ const chancgeKeyForShift = () => {
 //Добавление активного класса
 const addActiveClassKey = (keyCode) => {
   const element = document.querySelector(`.${keyCode}`);
-  element.classList.add('active-button');
+
+  if (element){
+    element.classList.add('active-button');
+  }
 }
 
 //Удаление активного класса
 const removeActiveClassKey = (e) => {
   const element = document.querySelector(`.${e.code}`);
   const keyboard = document.querySelector('.keyboard');
-  element.classList.remove('active-button');
+
+  if (element){
+    element.classList.remove('active-button');
+  }
+
 
   if (e.key === 'Shift') {
     keyboard.classList.remove('active-Shift');
@@ -181,19 +194,22 @@ function pastTextContentCommon(eventKey) {
 
   windowContent.setAttribute('value', '');
 
-  const classKey = key.classList;
+  if (key){
+    const classKey = key.classList;
 
-  let isIncludesClassForCheck = false;
+    let isIncludesClassForCheck = false;
 
-  classKey.forEach((item) => {
-    if (checkArrKey.includes(item)) {
-      isIncludesClassForCheck = true;
+    classKey.forEach((item) => {
+      if (checkArrKey.includes(item)) {
+        isIncludesClassForCheck = true;
+      }
+    });
+
+    if (!isIncludesClassForCheck) {
+      windowContent.value += key.textContent;
     }
-  });
-
-  if (!isIncludesClassForCheck) {
-    windowContent.value += key.textContent;
   }
+
 
   if (eventKey === 'Tab') {
     windowContent.value += '   ';
@@ -254,6 +270,7 @@ const addContentForClickShift = (e) => {
 
 function createKeyboard() {
   const keyboard = document.querySelector('.keyboard');
+
   const windowContent = document.querySelector('.content__window');
   pastKeyInKeyboard(KEYS);
 
@@ -267,5 +284,25 @@ function createKeyboard() {
 
   keyboard.addEventListener('mousedown', addContentForClickShift);
 }
+
+function setLocalStorageForUpdateWindow() {
+  const keyboard = document.querySelector('.keyboard');
+  const keyboardNames = keyboard.className;
+
+  localStorage.setItem('keyboardClassNames', keyboardNames);
+}
+
+function getLocalStorageForUpdateWindow() {
+  if (localStorage.getItem('keyboardClassNames')) {
+    let keyboardNames = localStorage.getItem('keyboardClassNames');
+
+    if (keyboardNames.includes('lang')) {
+      isChangeLangOnRu = true;
+    }
+  }
+}
+
+window.addEventListener('beforeunload', setLocalStorageForUpdateWindow);
+window.addEventListener('load', getLocalStorageForUpdateWindow);
 
 export default createKeyboard;
