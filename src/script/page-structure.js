@@ -10,6 +10,7 @@ const titleContent = 'RSS Virtual Keyboard';
 
 const textOperatingSystem = 'Virtual keyboard created on macOS';
 const switchLanguages = 'Switch between different input languages - control + option(alt)';
+const additionInfo = 'On my mac OS keyboard - delete(this is e.code - Backspace)';
 
 const createElement = (tag, name, content) => {
   const element = document.createElement(tag);
@@ -35,7 +36,7 @@ function createPageStructure() {
   createElement('textarea', ClassName.textarea);
   createElement('div', ClassName.keyboard);
 
-  const textContent = `*** ${textOperatingSystem}<br>*** ${switchLanguages}`;
+  const textContent = `*** ${textOperatingSystem}<br>*** ${switchLanguages}<br>***${additionInfo}`;
   createElement('div', ClassName.text, textContent);
 }
 

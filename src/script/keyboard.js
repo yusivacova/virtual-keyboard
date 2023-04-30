@@ -33,7 +33,6 @@ const createElement = (obj, placePast) => {
 
     if (keyboard.className.includes('lang') && value.length > 3) {
       if (!checkArrKeyForLang.includes(element.classList[1])) {
-        console.log(element.classList)
         element.innerHTML = value[2];
       } else {
         element.innerHTML = value[0];
@@ -47,7 +46,7 @@ const createElement = (obj, placePast) => {
 };
 
 //Сочетание клавиш
-const watchClickCntrAlt = (e) => {
+const watchPressCntrAlt = (e) => {
   //Переключение языка
   const keyboard = document.querySelector('.keyboard');
   addActiveClassKey(e.code);
@@ -67,15 +66,15 @@ const watchClickCntrAlt = (e) => {
 };
 
 //Включен CapsLock
-const watchClickCapsLock = (e) => {
+const watchPressCapsLock = (e) => {
   const buttonCapsLock = document.querySelector('.CapsLock');
 
   if (e.getModifierState('CapsLock')) {
     buttonCapsLock.classList.add('active-CapsLock');
-    chancgeKeyForCapsLock();
+    chancgeKeyForCapsLockAndShift();
   } else {
     buttonCapsLock.classList.remove('active-CapsLock');
-    chancgeKeyForCapsLock();
+    chancgeKeyForCapsLockAndShift();
   }
 }
 
@@ -85,7 +84,7 @@ const isLetter = (str) => {
   return regexp.test(str);
 }
 
-const chancgeKeyForCapsLock = () => {
+const chancgeKeyForCapsLockAndShift = () => {
   const buttons = document.querySelectorAll('.keyboard__key');
   const activeCapsLock = document.querySelector('.active-CapsLock');
 
@@ -108,7 +107,7 @@ const watchClickShift = (e) => {
 
   if (e.key === 'Shift') {
     keyboard.classList.add('active-Shift');
-    chancgeKeyForCapsLock();
+    chancgeKeyForCapsLockAndShift();
     chancgeKeyForShift();
   }
 }
@@ -142,7 +141,6 @@ const chancgeKeyForShift = () => {
       element.textContent = value[0];
 
       if (keyboard.className.includes('lang')) {
-        console.log(element.className)
         if (element.className.includes('Backquote')) {
           element.textContent = value[2];
         }
@@ -165,7 +163,7 @@ const removeActiveClassKey = (e) => {
 
   if (e.key === 'Shift') {
     keyboard.classList.remove('active-Shift');
-    chancgeKeyForCapsLock();
+    chancgeKeyForCapsLockAndShift();
     chancgeKeyForShift();
   }
 }
@@ -222,12 +220,14 @@ const watchClick = (e) => {
   const windowContent = document.querySelector('.content__window');
   windowContent.focus();
 
-  watchClickCapsLock(e);
-  watchClickCntrAlt(e);
+  watchPressCapsLock(e);
+  watchPressCntrAlt(e);
   watchClickShift(e);
 }
 
+//Добавлние клавиш в клавиатуру по клику
 const addContentAndActiveClassAfterClick = (e) => {
+  const buttonCapsLock = document.querySelector('.CapsLock');
   let classElement = e.target.classList;
 
   if (classElement[0] === 'keyboard__key') {
@@ -238,9 +238,17 @@ const addContentAndActiveClassAfterClick = (e) => {
 
     pastTextContentCommon(classElement[1]);
 
-    //======================================
+    if (classElement[1] === 'CapsLock') {
+      buttonCapsLock.classList.toggle('active-CapsLock');
+    }
+    chancgeKeyForCapsLockAndShift();
+  }
+}
 
-    //ДОБАВИТЬ ДЛЯ shift / capslock
+//Изменение клавиш по клику на клавишу Shift
+const addContentForClickShift = (e) => {
+  if (e.target.textContent === 'shift') {
+    chancgeKeyForCapsLockAndShift();
   }
 }
 
@@ -256,6 +264,8 @@ function createKeyboard() {
   windowContent.addEventListener('keydown', addContentAfterPressKeyboard);
 
   keyboard.addEventListener('click', addContentAndActiveClassAfterClick);
+
+  keyboard.addEventListener('mousedown', addContentForClickShift);
 }
 
 export default createKeyboard;

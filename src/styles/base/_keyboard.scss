@@ -35,11 +35,9 @@
   width: 5px;
 }
 
-.active-button {
+.active-button,
+.active-CapsLock {
   background-color: rgba(0, 94, 255, 0.875);
   box-shadow: 1px 1px 1px #000;
   border-radius: 15%;
-}
-
-.active-CapsLock {
 }
