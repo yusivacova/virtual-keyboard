@@ -2,7 +2,7 @@ import KEYS from './keys';
 
 const checkArrKey = ['Backspace', 'Tab', 'CapsLock', 'Enter', 'ShiftLeft', 'ArrowUp', 'ShiftRight', 'ControlLeft', 'AltLeft', 'MetaLeft', 'MetaRight', 'ArrowLeft', 'ArrowDown', 'ArrowRight', 'AltRight'];
 
-const checkArrKeyForLang = ['Backquote', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus', 'Equal'];
+const checkArrKeyForLang = ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus', 'Equal'];
 
 let arrCntrAlt = [];
 
@@ -31,10 +31,10 @@ const createElement = (obj, placePast) => {
     let element = document.createElement('div');
     element.className = `keyboard__key ${key}`;
 
-    if (keyboard.className.includes('lang') && value.length > 1) {
+    if (keyboard.className.includes('lang') && value.length > 3) {
       if (!checkArrKeyForLang.includes(element.classList[1])) {
         console.log(element.classList)
-        element.innerHTML = value[1];
+        element.innerHTML = value[2];
       } else {
         element.innerHTML = value[0];
       }
@@ -114,6 +114,7 @@ const watchClickShift = (e) => {
 }
 
 const chancgeKeyForShift = () => {
+  const keyboard = document.querySelector('.keyboard');
   const buttons = document.querySelectorAll('.keyboard__key');
   const activeShift = document.querySelector('.active-Shift');
 
@@ -123,10 +124,29 @@ const chancgeKeyForShift = () => {
     let value = objFirstCommonKeys[key];
 
     let element = document.querySelector(`.${key}`);
-    if (activeShift && value.length > 1) {
-      element.textContent = value[1];
+    if (activeShift) {
+      if (keyboard.className.includes('lang')) {
+        if (value.length === 4) {
+          element.textContent = value[3];
+        } else if (value.length === 3) {
+          element.textContent = value[2];
+        } else if (value.length === 2) {
+          element.textContent = value[1];
+        }
+      } else {
+        if (value.length > 1) {
+          element.textContent = value[1];
+        }
+      }
     } else {
       element.textContent = value[0];
+
+      if (keyboard.className.includes('lang')) {
+        console.log(element.className)
+        if (element.className.includes('Backquote')) {
+          element.textContent = value[2];
+        }
+      }
     }
   }
 }
@@ -151,11 +171,15 @@ const removeActiveClassKey = (e) => {
 }
 
 //Вставка контента в форму по нажатию клавиш
-const pastTextContent = (e) => {
-  const windowContent = document.querySelector('.content__window');
+const addContentAfterPressKeyboard = (e) => {
   event.preventDefault();
 
-  const key = document.querySelector(`.${e.code}`);
+  pastTextContentCommon(e.code);
+}
+
+function pastTextContentCommon(eventKey) {
+  const windowContent = document.querySelector('.content__window');
+  const key = document.querySelector(`.${eventKey}`);
 
   windowContent.setAttribute('value', '');
 
@@ -173,12 +197,12 @@ const pastTextContent = (e) => {
     windowContent.value += key.textContent;
   }
 
-  if (e.code === 'Tab') {
+  if (eventKey === 'Tab') {
     windowContent.value += '   ';
   }
 
   //Изменение позиции курсора и Удаление символов
-  if (e.code === 'Backspace') {
+  if (eventKey === 'Backspace') {
     let positionСursor = windowContent.selectionStart;
 
     let arrValue = windowContent.value.split('');
@@ -188,7 +212,7 @@ const pastTextContent = (e) => {
     windowContent.selectionEnd = positionСursor - 1;
   }
 
-  if (e.code === 'Enter') {
+  if (eventKey === 'Enter') {
     windowContent.value += '\n';
   }
 }
@@ -204,23 +228,20 @@ const watchClick = (e) => {
 }
 
 const addContentAndActiveClassAfterClick = (e) => {
-  const windowContent = document.querySelector('.content__window');
-
   let classElement = e.target.classList;
 
-  console.log(classElement)
-  console.log(classElement[1])
-//========================
-  if (classElement[0] === 'keyboard__key'){
-    if (!checkArrKey.includes(classElement[1])) {
-      windowContent.value += e.target.textContent;
-    }
+  if (classElement[0] === 'keyboard__key') {
     e.target.classList.add('active-button');
     setTimeout(() => {
       e.target.classList.remove('active-button');
     }, 310);
+
+    pastTextContentCommon(classElement[1]);
+
+    //======================================
+
+    //ДОБАВИТЬ ДЛЯ shift / capslock
   }
-///ПЕРЕПИСАТЬ ФУНКЦИЮ ПО ВСТАВКЕ КОНТЕНТА, ЧТОБЫ ПОДХОДИЛА И ПО КЛИКУ!!
 }
 
 function createKeyboard() {
@@ -232,7 +253,7 @@ function createKeyboard() {
 
   document.addEventListener('keyup', removeActiveClassKey);
 
-  windowContent.addEventListener('keydown', pastTextContent);
+  windowContent.addEventListener('keydown', addContentAfterPressKeyboard);
 
   keyboard.addEventListener('click', addContentAndActiveClassAfterClick);
 }
