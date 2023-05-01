@@ -12,6 +12,8 @@ let isChangeLangOnRu = false;
 const pastKeyInKeyboard = (arrKey) => {
   const keyboard = document.querySelector('.keyboard');
 
+  const windowContent = document.querySelector('.content__window');
+
   for (let i = 0; i < arrKey.length; i++) {
     let container = document.createElement('div');
     container.className = 'keyboard__row';
@@ -19,8 +21,9 @@ const pastKeyInKeyboard = (arrKey) => {
 
     let currentObj = arrKey[i];
 
-    if (isChangeLangOnRu){
+    if (isChangeLangOnRu) {
       keyboard.classList.add('lang');
+      isChangeLangOnRu = false;
     }
 
     createElement(currentObj, container);
@@ -60,6 +63,7 @@ const watchPressCntrAlt = (e) => {
 
   if (arrCntrAlt[0] === 'Control' && arrCntrAlt[1] === 'Alt') {
     keyboard.classList.toggle('lang');
+
     setTimeout(() => {
       keyboard.innerHTML = '';
       pastKeyInKeyboard(KEYS);
@@ -69,6 +73,8 @@ const watchPressCntrAlt = (e) => {
   if (arrCntrAlt.length >= 2 || arrCntrAlt[0] !== 'Control') {
     arrCntrAlt = [];
   }
+
+  console.log(arrCntrAlt)
 };
 
 //Включен CapsLock
@@ -159,7 +165,7 @@ const chancgeKeyForShift = () => {
 const addActiveClassKey = (keyCode) => {
   const element = document.querySelector(`.${keyCode}`);
 
-  if (element){
+  if (element) {
     element.classList.add('active-button');
   }
 }
@@ -169,7 +175,7 @@ const removeActiveClassKey = (e) => {
   const element = document.querySelector(`.${e.code}`);
   const keyboard = document.querySelector('.keyboard');
 
-  if (element){
+  if (element) {
     element.classList.remove('active-button');
   }
 
@@ -192,9 +198,13 @@ function pastTextContentCommon(eventKey) {
   const windowContent = document.querySelector('.content__window');
   const key = document.querySelector(`.${eventKey}`);
 
+  let positionСursor = windowContent.selectionStart;
+
   windowContent.setAttribute('value', '');
 
-  if (key){
+  // let arrValue = windowContent.value.split('\n');
+
+  if (key) {
     const classKey = key.classList;
 
     let isIncludesClassForCheck = false;
@@ -206,30 +216,61 @@ function pastTextContentCommon(eventKey) {
     });
 
     if (!isIncludesClassForCheck) {
-      windowContent.value += key.textContent;
+      windowContent.innerHTML += key.textContent;
+      windowContent.selectionStart = positionСursor + 1;
+      windowContent.selectionEnd = positionСursor + 1;
     }
   }
 
-
   if (eventKey === 'Tab') {
-    windowContent.value += '   ';
+    windowContent.innerHTML += '   ';
+    windowContent.selectionStart = positionСursor + 3;
+    windowContent.selectionEnd = positionСursor + 3;
   }
 
   //Изменение позиции курсора и Удаление символов
   if (eventKey === 'Backspace') {
-    let positionСursor = windowContent.selectionStart;
-
     let arrValue = windowContent.value.split('');
     arrValue.splice(windowContent.selectionStart - 1, 1);
-    windowContent.value = arrValue.join('');
+    windowContent.innerHTML = arrValue.join('');
     windowContent.selectionStart = positionСursor - 1;
     windowContent.selectionEnd = positionСursor - 1;
   }
 
   if (eventKey === 'Enter') {
-    windowContent.value += '\n';
+    windowContent.innerHTML += '\n';
+    windowContent.selectionStart = positionСursor + 1;
+    windowContent.selectionEnd = positionСursor + 1;
+  }
+
+  if (eventKey === 'Space') {
+    windowContent.selectionStart = positionСursor + 1;
+    windowContent.selectionEnd = positionСursor + 1;
+  }
+
+  if (eventKey.includes('Arrow')) {
+
+    if (eventKey === 'ArrowRight') {
+      windowContent.innerHTML += '&#9658;';
+    }
+
+    if (eventKey === 'ArrowLeft') {
+      windowContent.innerHTML += '&#9668;';
+    }
+
+    if (eventKey === 'ArrowUp') {
+      windowContent.innerHTML += '&#9650';
+    }
+
+    if (eventKey === 'ArrowDown') {
+      windowContent.innerHTML += '&#9660;';
+    }
+
+    windowContent.selectionStart = positionСursor + 1;
+    windowContent.selectionEnd = positionСursor + 1;
   }
 }
+
 
 //общая функция по нажатию на клавиатуру
 const watchClick = (e) => {
@@ -284,6 +325,7 @@ function createKeyboard() {
 
   keyboard.addEventListener('mousedown', addContentForClickShift);
 }
+
 
 function setLocalStorageForUpdateWindow() {
   const keyboard = document.querySelector('.keyboard');

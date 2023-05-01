@@ -14,6 +14,7 @@
 .keyboard__key {
   flex: 1 0 auto;
   height: 40px;
+  width: 40px;
   padding: 10px 0;
   border: 1px solid #000000;
   text-align: center;
@@ -23,16 +24,20 @@
 }
 
 .Space {
-  width: 195px;
+  width: 255px;
 }
 
 .ShiftRight,
 .ShiftLeft {
-  width: 67px;
+  width: 95px;
 }
 
-.ArrowUp {
-  width: 5px;
+.ArrowUp,
+.ArrowLeft,
+.ArrowDown,
+.ArrowRight {
+  width: 35px;
+  padding: 12px 0;
 }
 
 .active-button,
@@ -40,4 +45,26 @@
   background-color: rgba(0, 94, 255, 0.875);
   box-shadow: 1px 1px 1px #000;
   border-radius: 15%;
+}
+
+.CapsLock {
+  width: 70px;
+}
+
+.Enter {
+  width: 55px;
+}
+
+.MetaLeft,
+.MetaRight {
+  width: 68px;
+}
+
+.ControlLeft {
+  width: 50px;
+}
+
+.AltRight,
+.AltLeft{
+  width: 50px;
 }
