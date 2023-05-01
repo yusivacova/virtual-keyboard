@@ -103,9 +103,6 @@ dist
 # TernJS port file
 .tern-port
 
-.editorconfig
-.eslintignore
-.eslintrc.json
 .htmlvalidate.json
 .linthtml
 .stylelintignore

@@ -1,0 +1,71 @@
+.keyboard {
+  margin: 0 0 35px;
+  background-color: rgba(10, 6, 241, 0.42);
+  box-shadow: 5px 5px 5px #000000;
+}
+
+.keyboard__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+  margin: 5px;
+}
+
+.keyboard__key {
+  flex: 1 0 auto;
+  width: 40px;
+  height: 40px;
+  padding: 10px 0;
+  border: 1px solid #000000;
+  text-align: center;
+  background-color: rgb(0 182 255 / 81%);
+  box-shadow: 3px 3px 3px #000000;
+  transition: all 0.2s ease-out;
+}
+
+.Space {
+  width: 255px;
+}
+
+.ShiftRight,
+.ShiftLeft {
+  width: 95px;
+}
+
+.ArrowUp,
+.ArrowLeft,
+.ArrowDown,
+.ArrowRight {
+  width: 35px;
+  padding: 12px 0;
+}
+
+.active-button,
+.active-CapsLock {
+  border-radius: 15%;
+  background-color: rgba(0, 94, 255, 0.87);
+  box-shadow: 1px 1px 1px #000000;
+}
+
+.CapsLock {
+  width: 70px;
+}
+
+.Enter {
+  width: 55px;
+}
+
+.MetaLeft,
+.MetaRight {
+  width: 68px;
+}
+
+.ControlLeft {
+  width: 50px;
+}
+
+.AltRight,
+.AltLeft {
+  width: 50px;
+}
